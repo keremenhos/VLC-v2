@@ -1,0 +1,1429 @@
+options:
+  parameters:
+    author: keremenhos
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: OFDM_1
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: OFDM_1
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: Data
+  id: variable
+  parameters:
+    comment: ''
+    value: numpy.array(numpy.random.randint(M,size=(data_sc//2)*spf))
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [488, 16.0]
+    rotation: 0
+    state: true
+- name: M
+  id: variable
+  parameters:
+    comment: ''
+    value: '16'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [360, 64.0]
+    rotation: 0
+    state: enabled
+- name: P
+  id: variable_qtgui_check_box
+  parameters:
+    comment: ''
+    'false': '0'
+    gui_hint: ''
+    label: Print BER
+    'true': '1'
+    type: int
+    value: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1112, 52.0]
+    rotation: 0
+    state: true
+- name: data_sc
+  id: variable
+  parameters:
+    comment: ''
+    value: '24'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [360, 16.0]
+    rotation: 0
+    state: enabled
+- name: dsc
+  id: variable
+  parameters:
+    comment: ''
+    value: numpy.sort(list(pdsc*-1) + list(pdsc))
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [776, 64.0]
+    rotation: 0
+    state: true
+- name: fft_len
+  id: variable
+  parameters:
+    comment: ''
+    value: '64'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [160, 64.0]
+    rotation: 0
+    state: true
+- name: guard
+  id: variable
+  parameters:
+    comment: ''
+    value: fft_len-null-data_sc-pilot_sc
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [240, 16.0]
+    rotation: 0
+    state: true
+- name: noise
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: 2,2,1,2
+    label: Noise Power
+    min_len: '200'
+    orient: Qt.Horizontal
+    rangeType: float
+    start: '-30'
+    step: '0.5'
+    stop: '10'
+    value: '-30'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1008, 12.0]
+    rotation: 0
+    state: enabled
+- name: 'null'
+  id: variable
+  parameters:
+    comment: ''
+    value: '15'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [304, 16.0]
+    rotation: 0
+    state: true
+- name: pck_len
+  id: variable
+  parameters:
+    comment: ''
+    value: '4096'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [224, 64.0]
+    rotation: 0
+    state: true
+- name: pdsc
+  id: variable
+  parameters:
+    comment: ''
+    value: 'numpy.delete((numpy.arange((data_sc+pilot_sc)//2)+1+(null//2)),((numpy.arange((data_sc+pilot_sc)//2)+1+(null//2))[:,
+      None] == ppsc).argmax(axis=0))
+
+      '
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [856, 16.0]
+    rotation: 0
+    state: true
+- name: pilot_sc
+  id: variable
+  parameters:
+    comment: ''
+    value: '12'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [424, 16.0]
+    rotation: 0
+    state: true
+- name: pilot_symbols
+  id: variable
+  parameters:
+    comment: ''
+    value: numpy.array(numpy.random.randint(2,size=pilot_sc//2))*2 -1
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [496, 64.0]
+    rotation: 0
+    state: true
+- name: ppsc
+  id: variable
+  parameters:
+    comment: ''
+    value: numpy.arange(-1*((data_sc+pilot_sc)//(pilot_sc*2)),((data_sc+pilot_sc)/2),((data_sc+pilot_sc)/pilot_sc))[numpy.arange(-1*((data_sc+pilot_sc)//(pilot_sc*2)),((data_sc+pilot_sc)/2),((data_sc+pilot_sc)/pilot_sc))>0].astype(int)+1+(null//2)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [784, 16.0]
+    rotation: 0
+    state: true
+- name: ps
+  id: variable
+  parameters:
+    comment: ''
+    value: list(numpy.flip(pilot_symbols)) + list(pilot_symbols)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [912, 64.0]
+    rotation: 0
+    state: true
+- name: psc
+  id: variable
+  parameters:
+    comment: ''
+    value: numpy.sort(list(ppsc*-1) + list(ppsc))
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [664, 64.0]
+    rotation: 0
+    state: true
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '1000000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [160, 16.0]
+    rotation: 0
+    state: enabled
+- name: spf
+  id: variable
+  parameters:
+    comment: ''
+    value: (pck_len-510)//fft_len
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [304, 64.0]
+    rotation: 0
+    state: true
+- name: blocks_complex_to_float_1
+  id: blocks_complex_to_float
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [768, 356.0]
+    rotation: 180
+    state: enabled
+- name: blocks_complex_to_mag_squared_0
+  id: blocks_complex_to_mag_squared
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [920, 460.0]
+    rotation: 0
+    state: disabled
+- name: blocks_float_to_complex_0
+  id: blocks_float_to_complex
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [704, 196.0]
+    rotation: 180
+    state: enabled
+- name: blocks_float_to_complex_1
+  id: blocks_float_to_complex
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [144, 532.0]
+    rotation: 0
+    state: true
+- name: blocks_keep_m_in_n_1
+  id: blocks_keep_m_in_n
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    m: fft_len*spf
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    n: pck_len
+    offset: '1'
+    type: float
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [424, 368.0]
+    rotation: 180
+    state: enabled
+- name: blocks_multiply_const_vxx_0
+  id: blocks_multiply_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: 1/25
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [464, 252.0]
+    rotation: 180
+    state: true
+- name: blocks_stream_to_tagged_stream_0
+  id: blocks_stream_to_tagged_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    len_tag_key: packet_len
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    packet_len: '510'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [656, 128.0]
+    rotation: 0
+    state: enabled
+- name: blocks_stream_to_tagged_stream_0_0_0_0_0_0
+  id: blocks_stream_to_tagged_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    len_tag_key: '"frame_len"'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    packet_len: data_sc
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [208, 120.0]
+    rotation: 0
+    state: enabled
+- name: blocks_stream_to_tagged_stream_1
+  id: blocks_stream_to_tagged_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    len_tag_key: '"packet_len"'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    packet_len: fft_len*spf
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [456, 192.0]
+    rotation: 0
+    state: enabled
+- name: blocks_stream_to_tagged_stream_3
+  id: blocks_stream_to_tagged_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    len_tag_key: sym
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    packet_len: '1'
+    type: complex
+    vlen: fft_len
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [656, 440.0]
+    rotation: 0
+    state: true
+- name: blocks_stream_to_vector_0_0
+  id: blocks_stream_to_vector
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: fft_len
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [304, 548.0]
+    rotation: 0
+    state: enabled
+- name: blocks_tag_gate_0
+  id: blocks_tag_gate
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    propagate_tags: 'False'
+    single_key: '""'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [40.0, 440]
+    rotation: 270
+    state: true
+- name: blocks_tag_gate_1
+  id: blocks_tag_gate
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    propagate_tags: 'False'
+    single_key: '"sym"'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [688, 512.0]
+    rotation: 180
+    state: true
+- name: blocks_tagged_stream_mux_1
+  id: blocks_tagged_stream_mux
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    lengthtagname: packet_len
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    ninputs: '2'
+    tag_preserve_head_pos: '0'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [688, 276.0]
+    rotation: 0
+    state: enabled
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [512, 548.0]
+    rotation: 180
+    state: true
+- name: blocks_vector_source_x_0_1
+  id: blocks_vector_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    repeat: 'True'
+    tags: '[]'
+    type: float
+    vector: '[-1,-1,-1,-1,-1,-1,-1,-1,1,-1,-1,-1,1,-1,-1,-1,1,1,-1,-1,1,-1,-1,-1,1,1,1,-1,1,-1,1,-1,1,1,-1,1,1,-1,-1,-1,1,1,1,-1,-1,-1,1,-1,-1,1,-1,1,-1,1,-1,-1,-1,1,1,-1,1,1,-1,-1,1,1,1,1,1,-1,-1,1,1,1,1,-1,-1,-1,1,-1,1,1,-1,1,1,1,-1,-1,1,-1,1,-1,-1,1,-1,-1,-1,-1,-1,1,-1,-1,1,1,-1,-1,1,1,1,-1,1,-1,-1,-1,1,1,1,1,1,-1,1,1,1,1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,1,1,1,1,-1,1,1,1,-1,-1,-1,-1,1,-1,1,1,-1,-1,1,1,-1,1,1,-1,1,1,1,1,-1,1,-1,-1,-1,-1,1,1,1,-1,-1,1,1,-1,-1,-1,-1,1,-1,-1,1,-1,-1,-1,1,-1,1,-1,1,1,1,-1,1,-1,1,1,1,1,-1,-1,1,-1,-1,1,-1,1,1,1,-1,-1,1,1,1,-1,-1,-1,-1,-1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,1,1,1,-1,1,-1,1,-1,-1,1,-1,1,-1,-1,-1,-1,-1,-1,1,-1,1,-1,1,-1,1,-1,1,1,1,1,1,-1,1,-1,1,1,-1,1,-1,-1,-1,-1,-1,1,1,-1,1,1,1,-1,1,1,-1,1,1,-1,1,-1,1,1,-1,-1,-1,-1,-1,1,-1,1,1,1,-1,1,1,1,1,1,-1,-1,-1,1,1,1,1,-1,-1,1,1,-1,1,-1,-1,1,1,-1,1,-1,1,1,1,-1,-1,-1,1,1,-1,1,-1,-1,-1,1,-1,1,1,1,1,1,1,1,-1,1,-1,-1,1,-1,1,1,-1,-1,-1,1,-1,1,-1,-1,1,1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,-1,-1,1,1,-1,-1,1,1,-1,-1,1,-1,1,-1,1,1,-1,-1,1,-1,-1,1,1,1,1,1,1,-1,1,1,-1,1,-1,-1,1,-1,-1,1,-1,-1,1,1,-1,1,1,1,1,1,1,-1,-1,1,-1,1,1,-1,1,-1,1,-1,-1,-1,-1,1,-1,1,-1,-1,-1,1,-1,-1,1,1,1,-1,1,1,-1,-1,1,-1,1,1,1,1,-1,1,1,-1,-1,-1,-1,1,1,-1,1,-1,1,-1,1,-1,-1,1,1,1,-1,-1,1,-1,-1,-1,-1,1,1,-1,-1,-1,1,-1,-1,-1,-1]'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [456, 120.0]
+    rotation: 0
+    state: enabled
+- name: blocks_vector_to_stream_0
+  id: blocks_vector_to_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: fft_len
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [464, 300.0]
+    rotation: 0
+    state: enabled
+- name: blocks_vector_to_stream_0_0
+  id: blocks_vector_to_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: fft_len
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [944, 508.0]
+    rotation: 0
+    state: enabled
+- name: channels_channel_model_0
+  id: channels_channel_model
+  parameters:
+    affinity: ''
+    alias: ''
+    block_tags: 'True'
+    comment: ''
+    epsilon: '1'
+    freq_offset: '0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    noise_voltage: 10.0**(noise/10.0)
+    seed: '0'
+    taps: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [968, 220.0]
+    rotation: 0
+    state: enabled
+- name: digital_corr_est_cc_0
+  id: digital_corr_est_cc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    mark_delay: '509'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    sps: '1'
+    symbols: '[-1,-1,-1,-1,-1,-1,-1,-1,1,-1,-1,-1,1,-1,-1,-1,1,1,-1,-1,1,-1,-1,-1,1,1,1,-1,1,-1,1,-1,1,1,-1,1,1,-1,-1,-1,1,1,1,-1,-1,-1,1,-1,-1,1,-1,1,-1,1,-1,-1,-1,1,1,-1,1,1,-1,-1,1,1,1,1,1,-1,-1,1,1,1,1,-1,-1,-1,1,-1,1,1,-1,1,1,1,-1,-1,1,-1,1,-1,-1,1,-1,-1,-1,-1,-1,1,-1,-1,1,1,-1,-1,1,1,1,-1,1,-1,-1,-1,1,1,1,1,1,-1,1,1,1,1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,1,1,1,1,-1,1,1,1,-1,-1,-1,-1,1,-1,1,1,-1,-1,1,1,-1,1,1,-1,1,1,1,1,-1,1,-1,-1,-1,-1,1,1,1,-1,-1,1,1,-1,-1,-1,-1,1,-1,-1,1,-1,-1,-1,1,-1,1,-1,1,1,1,-1,1,-1,1,1,1,1,-1,-1,1,-1,-1,1,-1,1,1,1,-1,-1,1,1,1,-1,-1,-1,-1,-1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,1,1,1,-1,1,-1,1,-1,-1,1,-1,1,-1,-1,-1,-1,-1,-1,1,-1,1,-1,1,-1,1,-1,1,1,1,1,1,-1,1,-1,1,1,-1,1,-1,-1,-1,-1,-1,1,1,-1,1,1,1,-1,1,1,-1,1,1,-1,1,-1,1,1,-1,-1,-1,-1,-1,1,-1,1,1,1,-1,1,1,1,1,1,-1,-1,-1,1,1,1,1,-1,-1,1,1,-1,1,-1,-1,1,1,-1,1,-1,1,1,1,-1,-1,-1,1,1,-1,1,-1,-1,-1,1,-1,1,1,1,1,1,1,1,-1,1,-1,-1,1,-1,1,1,-1,-1,-1,1,-1,1,-1,-1,1,1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,-1,-1,1,1,-1,-1,1,1,-1,-1,1,-1,1,-1,1,1,-1,-1,1,-1,-1,1,1,1,1,1,1,-1,1,1,-1,1,-1,-1,1,-1,-1,1,-1,-1,1,1,-1,1,1,1,1,1,1,-1,-1,1,-1,1,1,-1,1,-1,1,-1,-1,-1,-1,1,-1,1,-1,-1,-1,1,-1,-1,1,1,1,-1,1,1,-1,-1,1,-1,1,1,1,1,-1,1,1,-1,-1,-1,-1,1,1,-1,1,-1,1,-1,1,-1,-1,1,1,1,-1,-1,1,-1,-1,-1,-1,1,1,-1,-1,-1,1,-1,-1,-1,-1]'
+    threshold: '0.015'
+    threshold_method: digital.THRESHOLD_ABSOLUTE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [960, 364.0]
+    rotation: 180
+    state: enabled
+- name: digital_ofdm_carrier_allocator_cvc_0
+  id: digital_ofdm_carrier_allocator_cvc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    fft_len: fft_len
+    len_tag_key: '"frame_len"'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    occupied_carriers: ((dsc) ,)
+    output_is_shifted: 'True'
+    pilot_carriers: ((psc),)
+    pilot_symbols: ((ps),)
+    sync_words: '[]'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 176.0]
+    rotation: 180
+    state: true
+- name: epy_block_0
+  id: epy_block
+  parameters:
+    M: M
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      import time\nfrom gnuradio import gr\n\n\nclass blk(gr.sync_block):  # other\
+      \ base classes are basic_block, decim_block, interp_block\n    \"\"\"Embedded\
+      \ Python Block example - a simple multiply const\"\"\"\n\n    def __init__(self,\
+      \ data=[], M=4, data_subcarrier=1, pilot_subcarrier=1, null_subcarrier=1, guard_subcarrier\
+      \ = 1, fft_size = 64, pilot_symbols=[], spf = 1):  # only default arguments\
+      \ here\n        \"\"\"arguments to this function show up as parameters in GRC\"\
+      \"\"\n        gr.sync_block.__init__(\n            self,\n            name='OFDM\
+      \ Frame Generator',   # will show up in GRC\n            in_sig=[],\n      \
+      \      out_sig=[np.complex64]\n        )\n        self.M = M\n        self.c\
+      \ = 0\n        self.data = data\n        self.data_subcarrier = data_subcarrier\n\
+      \        self.pilot_subcarrier = pilot_subcarrier\n        self.null_subcarrier\
+      \ = null_subcarrier\n        self.guard_subcarrier = guard_subcarrier\n    \
+      \    self.fft_size = fft_size\n        self.l = (len(self.data)//((self.data_subcarrier)/2))-1\n\
+      \        self.d = ((self.data_subcarrier+self.pilot_subcarrier)//2)\n      \
+      \  self.data_buf = np.zeros(len(self.data), dtype=complex)\n        self.pilot_symbols\
+      \ = pilot_symbols\n        self.out_buf = np.zeros(len(self.data)*2, dtype=complex)\n\
+      \        self.spf = spf\n        self.flg = 0\n        \n    def modulat(self,\
+      \ MO):\n        if MO == 2:\n            cons = np.array([1+0*1j,-1+0*1j])\n\
+      \        else:\n            n = np.arange(0,MO)\n            a = np.asarray([x^(x>>1)\
+      \ for x in n])\n            D = np.sqrt(MO).astype(int)\n            a = np.reshape(a,(D,D))\n\
+      \            a[1::2, :] = a[1::2, ::-1]\n            nGray=np.reshape(a,(MO))\n\
+      \            x1 = nGray//D\n            y = nGray%D\n            Ay=2*y+1-D\n\
+      \            Ax=2*x1+1-D\n            cons = Ax+1j*Ay\n            cons = cons/np.max(np.absolute((np.real(cons))))\n\
+      \        return cons\n        \n#    def pilot_generator(self, psc, pd):\n#\
+      \        pp = np.zeros(psc, dtype=complex)\n#        for i in range(psc):\n\
+      #            if pd[i] == 1:\n#                pp[i] = 1+0*1j\n#            else:\n\
+      #                pp[i] = -1+0*1j\n#        return pp\n\n    def work(self, input_items,\
+      \ output_items):\n        \n        if self.flg == 0:\n            self.flg\
+      \ = 1\n            self.cons = self.modulat(self.M)\n#            self.ppos\
+      \ = np.arange(-1*((self.data_subcarrier+self.pilot_subcarrier)//(self.pilot_subcarrier*2)),((self.data_subcarrier+self.pilot_subcarrier)/2),((self.data_subcarrier+self.pilot_subcarrier)/self.pilot_subcarrier))\n\
+      #            self.ppos = self.ppos[self.ppos>0]\n#            self.pilots =\
+      \ self.pilot_generator(self.pilot_subcarrier//2, self.pilot_symbols)\n     \
+      \   \n        out = output_items[0]\n        \n        if len(out)<len(self.data):\n\
+      #            print(' ')\n#            print(len(out))\n            return 0\n\
+      \        \n        for x in range(len(self.data)):\n            self.data_buf[x]\
+      \ = self.cons[self.data[x]]\n\n        for z in range(self.spf*(self.data_subcarrier//2)):\n\
+      \            self.out_buf[z*self.data_subcarrier:(z+1)*self.data_subcarrier]\
+      \ = list(np.conj(np.flip(self.data_buf[z*self.data_subcarrier//2:(z+1)*self.data_subcarrier//2])))\
+      \ + list(self.data_buf[z*self.data_subcarrier//2:(z+1)*self.data_subcarrier//2])\n\
+      \n        out[:(len(out)//len(self.out_buf))*len(self.out_buf)] = list(self.out_buf)*(len(out)//len(self.out_buf))\n\
+      \        return (len(out)//len(self.out_buf))*len(self.out_buf)\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    data: Data
+    data_subcarrier: data_sc
+    fft_size: fft_len
+    guard_subcarrier: guard
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    null_subcarrier: 'null'
+    pilot_subcarrier: pilot_sc
+    pilot_symbols: pilot_symbols
+    spf: spf
+  states:
+    _io_cache: ('OFDM Frame Generator', 'blk', [('data', '[]'), ('M', '4'), ('data_subcarrier',
+      '1'), ('pilot_subcarrier', '1'), ('null_subcarrier', '1'), ('guard_subcarrier',
+      '1'), ('fft_size', '64'), ('pilot_symbols', '[]'), ('spf', '1')], [], [('0',
+      'complex', 1)], 'Embedded Python Block example - a simple multiply const', ['M',
+      'data', 'data_subcarrier', 'fft_size', 'guard_subcarrier', 'null_subcarrier',
+      'pilot_subcarrier', 'pilot_symbols', 'spf'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 96.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_1
+  id: epy_block
+  parameters:
+    _source_code: "import time\nimport random\nimport numpy as np\n\nfrom gnuradio\
+      \ import gr\nfrom gnuradio import gr_unittest\nfrom gnuradio import digital\n\
+      from gnuradio import blocks\nfrom gnuradio import grc\nimport pmt\nimport inspect\n\
+      \nclass blk(gr.basic_block):\n    def __init__(self, frame_length=1):\n    \
+      \    \n        gr.basic_block.__init__(\n            self,\n            name=\"\
+      Preamble Demux\",\n            in_sig=[np.float32],\n            out_sig=[np.float32]\n\
+      \        )\n        self.a = 0\n        self.aa = 0\n        self.buf = []\n\
+      \        self.off = 0\n        self.det = 0\n        self.flg2 = 0\n       \
+      \ self.b = 0\n        self.frame_length = frame_length\n        \n    def forecast(self,\
+      \ noutput_items, ninput_items_required):\n        #setup size of input_items[i]\
+      \ for work call\n        for i in range(len(ninput_items_required)):\n     \
+      \       ninput_items_required[i] = 4096\n            \n    def general_work(self,\
+      \ input_items, output_items):\n        in0 = input_items[0]\n        out = output_items[0]\n\
+      \        \n        if self.det == 0:\n            tags = self.get_tags_in_window(0,\
+      \ 0, len(in0))\n            for tag in tags:\n                offset = tag.offset\n\
+      \                key = pmt.to_python(tag.key) # convert from PMT to python string\n\
+      \                if key == 'corr_est':\n                    self.off = offset\n\
+      \                    self.det = 1\n                    self.flg2 = 0\n     \
+      \               self.buf.extend(in0[(self.off-self.aa)+1:])\n              \
+      \      break\n            if self.det == 0:\n                self.b = 0\n  \
+      \                  \n        if len(self.buf)<self.frame_length and self.det\
+      \ == 1 and self.flg2 == 1:\n            self.buf.extend(in0)\n        \n   \
+      \     if len(self.buf)>=self.frame_length and self.det == 1 and len(out)>=self.frame_length:\n\
+      \            out[:self.frame_length] = self.buf[:self.frame_length]\n      \
+      \      if len(self.buf) == self.frame_length:\n                self.buf = []\n\
+      \                self.det = 0\n                self.b = 1\n            else:\n\
+      \                tags = self.get_tags_in_window(0, 0, len(in0))\n          \
+      \      for tag in tags:\n                    self.offset2 = tag.offset\n   \
+      \                 key = pmt.to_python(tag.key) # convert from PMT to python\
+      \ string\n                    if key == 'corr_est':\n                      \
+      \  if self.offset2 == self.off:\n                            self.buf = []\n\
+      \                            self.det = 0\n                            self.b\
+      \ = 1\n                            break\n                        else:\n  \
+      \                          self.off = self.offset2\n                       \
+      \     self.det = 1\n                            self.flg2 = 0\n            \
+      \                self.buf=[]\n                            self.buf.extend(in0[(self.off-self.aa)+1:])\n\
+      \                            self.b = 1\n                            break\n\
+      \n        self.flg2 = 1\n        self.aa = self.aa + len(in0)\n        \n  \
+      \      self.consume(0, len(in0)) #consume port 0 input\n        \n        if\
+      \ self.b == 0:\n            return 0\n        else:\n            return self.frame_length\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    frame_length: pck_len
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Preamble Demux', 'blk', [('frame_length', '1')], [('0', 'float',
+      1)], [('0', 'float', 1)], '', ['frame_length'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [568, 356.0]
+    rotation: 180
+    state: true
+- name: epy_block_2
+  id: epy_block
+  parameters:
+    M: M
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport time\nimport random\n\
+      import numpy as np\n\nfrom gnuradio import gr\nfrom gnuradio import gr_unittest\n\
+      from gnuradio import digital\nfrom gnuradio import blocks\nfrom gnuradio import\
+      \ grc\nfrom scipy import interpolate\nimport pmt\nimport inspect\n\n\nclass\
+      \ blk(gr.basic_block):  # other base classes are basic_block, decim_block, interp_block\n\
+      \    \"\"\"Embedded Python Block example - a simple multiply const\"\"\"\n\n\
+      \    def __init__(self, M=4, data_subcarrier=1, pilot_subcarrier=1, null_subcarrier=1,\
+      \ guard_subcarrier = 1, fft_size = 64, pilot_symbols=[], symbols_per_frame=1):\
+      \  # only default arguments here\n        \"\"\"arguments to this function show\
+      \ up as parameters in GRC\"\"\"\n        gr.basic_block.__init__(\n        \
+      \    self,\n            name='OFDM Receiver',   # will show up in GRC\n    \
+      \        in_sig=[np.complex64],\n            out_sig=[np.complex64]\n      \
+      \  )\n        # if an attribute with the same name as a parameter is found,\n\
+      \        # a callback is registered (properties work, too).\n        self.M\
+      \ = M\n        self.data_sc = data_subcarrier\n        self.pilot_sc = pilot_subcarrier\n\
+      \        self.null_sc = null_subcarrier\n        self.guard_sc = guard_subcarrier\n\
+      \        self.ffts = fft_size\n        self.pilot_sym = pilot_symbols\n    \
+      \    self.aa = 0\n        self.out_buf = []\n        self.data_out_buf = []\n\
+      \        self.sym_n = 0\n        self.spf = symbols_per_frame\n        self.flg\
+      \ = 0\n        self.flg2 = 0\n#        self.n_sc = (self.data_sc+self.pilot_sc)/2\n\
+      \        self.n_grd = self.guard_sc//2\n\n    def forecast(self, noutput_items,\
+      \ ninput_items_required):\n        #setup size of input_items[i] for work call\n\
+      \        for i in range(len(ninput_items_required)):\n            ninput_items_required[i]\
+      \ = 4096\n            \n    def pilot_generator(self, psc, pd):\n        pp\
+      \ = np.zeros(psc, dtype=complex)\n        for i in range(psc):\n           \
+      \ if pd[i] == 1:\n                pp[i] = 1+0*1j\n            else:\n      \
+      \          pp[i] = -1+0*1j\n        return pp\n\n    def general_work(self,\
+      \ input_items, output_items):\n\n        in0 = input_items[0][:]\n        out\
+      \ = output_items[0][:]\n        \n        if self.flg2 == 0:\n            self.ppos\
+      \ = np.arange(-1*((self.data_sc+self.pilot_sc)//(self.pilot_sc*2)),((self.data_sc+self.pilot_sc)/2),((self.data_sc+self.pilot_sc)/self.pilot_sc))\n\
+      \            self.ppos = self.ppos[self.ppos>0].astype(int)\n            self.pilots\
+      \ = self.pilot_generator(self.pilot_sc//2, self.pilot_sym)\n            self.tx_pilot\
+      \ = np.concatenate((np.flip(self.pilots),self.pilots),axis=None)\n         \
+      \   \n            self.alli = np.array(range(self.ffts))\n            self.sc_ind\
+      \ = np.arange((self.n_grd+1),(self.ffts-self.n_grd))\n            self.sc_ind\
+      \ = np.delete(self.sc_ind,(self.sc_ind[:, None] == (np.arange(-self.null_sc//2,self.null_sc//2)+(self.ffts/2)+1)).argmax(axis=0))\n\
+      \            self.sc_ind[:(np.where(self.sc_ind==((self.ffts/2)-(self.null_sc//2)-1))[0][0])+1]=np.flipud(self.sc_ind[:(np.where(self.sc_ind==((self.ffts/2)-(self.null_sc//2)-1))[0][0])+1])\n\
+      \            self.alli[:(np.where(self.alli==((self.ffts/2)-1))[0][0])+1]=np.flipud(self.alli[:(np.where(self.alli==((self.ffts/2)-1))[0][0])+1])\n\
+      \            self.p_ind = np.sort(np.concatenate((self.alli[self.ppos+(self.null_sc//2)],self.alli[((self.ffts//2)+(self.null_sc//2)+1+self.ppos)]),axis=None))\n\
+      \            self.s_sc_ind = np.sort(self.sc_ind)\n            self.dsc_ind\
+      \ = np.delete(self.s_sc_ind,(self.s_sc_ind[:, None] == self.p_ind).argmax(axis=0))\n\
+      \            self.flg2 = 1\n            ppp=np.where(self.sc_ind>=self.ffts//2)[0]\n\
+      \            self.dsc_iii = np.delete(ppp,(ppp[:,None]==(self.ppos+((self.data_sc+self.pilot_sc)//2))).argmax(axis=0))\n\
+      \        \n        tags = self.get_tags_in_window(0, 0, len(in0))\n        for\
+      \ tag in tags:\n            offset = tag.offset\n            key = pmt.to_python(tag.key)\
+      \ # convert from PMT to python string\n            if key == 'sym':\n      \
+      \          self.offset = offset\n                self.xx = self.p_ind + self.offset\
+      \ - self.aa\n                self.ch_est = np.true_divide(in0[self.xx.astype(int)],self.tx_pilot)\n\
+      \                \n                self.ch_est_r = np.real(self.ch_est)\n  \
+      \              self.ch_est_i = np.imag(self.ch_est)\n                \n    \
+      \            f_r = interpolate.splrep(self.p_ind,self.ch_est_r,s=0)\n      \
+      \          f_i = interpolate.splrep(self.p_ind,self.ch_est_i,s=0)\n        \
+      \        H_r = interpolate.splev((self.s_sc_ind),f_r,der=0)\n              \
+      \  H_i = interpolate.splev((self.s_sc_ind),f_i,der=0)\n                H = H_r\
+      \ + H_i*1j\n\n                if sum(H_r) != 0:\n                    self.indind\
+      \ = self.s_sc_ind + (self.offset-self.aa)\n                    self.sym_out\
+      \ = np.multiply(np.multiply((np.multiply(np.conj(H),H)**(-1)),np.conj(H)),in0[self.indind])\n\
+      \                    self.data_out_buf.extend(self.sym_out[self.dsc_iii])\n\
+      \                    self.sym_n += 1\n                    if self.flg == 0:\n\
+      \                        self.flg = 1\n                        self.index1 =\
+      \ self.offset\n                        self.cind = 0\n                    self.add_item_tag(0,\
+      \ (self.index1 + self.cind*(self.data_sc//2)), pmt.intern(\"Sym#\"), pmt.intern(str(self.sym_n)))\n\
+      \                    if self.sym_n == 1:\n                        self.add_item_tag(0,\
+      \ (self.index1 + self.cind*(self.data_sc//2)), pmt.intern(\"pck_st\"), pmt.intern(str(self.sym_n)))\n\
+      \                    self.cind += 1\n                    if self.sym_n == self.spf:\n\
+      \                        self.sym_n = 0\n                \n        if len(self.data_out_buf)>=len(out):\n\
+      \            output_items[0][:] = self.data_out_buf[:len(out)]\n           \
+      \ self.data_out_buf = self.data_out_buf[len(out):]\n            self.aa = self.aa\
+      \ + len(in0)\n            self.consume(0, len(in0))\n            return len(out)\n\
+      \n        self.aa = self.aa + len(in0)\n        self.consume(0, len(in0))\n\
+      \        return 0\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    data_subcarrier: data_sc
+    fft_size: fft_len
+    guard_subcarrier: guard
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    null_subcarrier: 'null'
+    pilot_subcarrier: pilot_sc
+    pilot_symbols: pilot_symbols
+    symbols_per_frame: spf
+  states:
+    _io_cache: ('OFDM Receiver', 'blk', [('M', '4'), ('data_subcarrier', '1'), ('pilot_subcarrier',
+      '1'), ('null_subcarrier', '1'), ('guard_subcarrier', '1'), ('fft_size', '64'),
+      ('pilot_symbols', '[]'), ('symbols_per_frame', '1')], [('0', 'complex', 1)],
+      [('0', 'complex', 1)], 'Embedded Python Block example - a simple multiply const',
+      ['M'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [920, 552.0]
+    rotation: 180
+    state: enabled
+- name: epy_block_3
+  id: epy_block
+  parameters:
+    M: M
+    _source_code: "import time\nimport random\nimport numpy as np\n\nfrom gnuradio\
+      \ import gr\nfrom gnuradio import gr_unittest\nfrom gnuradio import digital\n\
+      from gnuradio import blocks\nfrom gnuradio import grc\nimport pmt\nimport inspect\n\
+      \n\nclass blk(gr.sync_block):\n\n    def __init__(self, data=[], M=4, display_BER\
+      \ = 0, num_bits = 1000000):\n        gr.sync_block.__init__(\n            self,\n\
+      \            name='BER',\n            in_sig=[np.int16],\n            out_sig=[np.float32]\n\
+      \        )\n        self.bin_data = data\n        self.e = 0\n        self.p\
+      \ = 0\n        self.buf = []\n        self.flg = 0\n        self.k = np.sqrt(M)\n\
+      \        self.ber = 1\n        self.display_BER = display_BER\n        self.num_bits\
+      \ = num_bits\n\n    def work(self, input_items, output_items):\n        if self.flg\
+      \ == 1:\n            self.flg = 0\n            self.buf.extend(input_items[0][:len(self.bin_data)-len(self.buf)])\n\
+      \            self.p += 1\n            for j in range(len(self.bin_data)):\n\
+      \                self.e += sum(np.array(list(bin(int(self.buf[j])^self.bin_data[j])[2:])).astype('int'))\n\
+      #                if self.e != 0 and self.aa < 3:\n#                    print('flg1---------------')\n\
+      #                    print(self.e)\n#                    print((self.off-self.nitems_read(0)))\n\
+      #                    self.aa += 1\n            \n        if self.flg == 0:\n\
+      \            tags = self.get_tags_in_window(0, 0, len(input_items[0]))\n   \
+      \         for tag in tags:\n                offset = tag.offset\n          \
+      \      key = pmt.to_python(tag.key) # convert from PMT to python string\n  \
+      \              value = pmt.to_python(tag.value)\n                if key == 'pck_st':\n\
+      \                    self.off = offset\n                    if (self.off-self.nitems_read(0))\
+      \ + len(self.bin_data) <= len(input_items[0]):\n                        self.p\
+      \ += 1\n                        for i in range(len(self.bin_data)):\n      \
+      \                      self.e += sum(np.array(list(bin(int(input_items[0][(self.off-self.nitems_read(0))+i])^self.bin_data[i])[2:])).astype('int'))\n\
+      \                    else:\n                        self.buf=[]\n          \
+      \              self.buf.extend(input_items[0][(self.off-self.nitems_read(0)):])\n\
+      \                        self.flg = 1\n                        \n        if\
+      \ self.p*(self.k*len(self.bin_data)) > self.num_bits:\n            self.ber\
+      \ = self.e/(self.p*(self.k*len(self.bin_data)))\n            self.e = 0\n  \
+      \          self.p = 0\n            if self.display_BER == 1:\n             \
+      \   print(self.ber)\n\n        output_items[0][:] = self.ber*np.ones(len(output_items[0]))\n\
+      \        return len(output_items[0])\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    data: Data
+    display_BER: P
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_bits: 1e6
+  states:
+    _io_cache: ('BER', 'blk', [('data', '[]'), ('M', '4'), ('display_BER', '0'), ('num_bits',
+      '1000000')], [('0', 'short', 1)], [('0', 'float', 1)], '', ['display_BER', 'num_bits'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [640, 680.0]
+    rotation: 180
+    state: enabled
+- name: epy_block_4
+  id: epy_block
+  parameters:
+    M: M
+    _source_code: "import time\nimport random\nimport numpy as np\n\nfrom gnuradio\
+      \ import gr\nfrom gnuradio import gr_unittest\nfrom gnuradio import digital\n\
+      from gnuradio import blocks\nfrom gnuradio import grc\nimport pmt\nimport inspect\n\
+      \n\nclass blk(gr.sync_block):  # other base classes are basic_block, decim_block,\
+      \ interp_block\n\n    def __init__(self, M=4):  # only default arguments here\n\
+      \        gr.sync_block.__init__(\n            self,\n            name='QAM Demodulator',\
+      \   # will show up in GRC\n            in_sig=[np.complex64],\n            out_sig=[np.int16]\n\
+      \        )\n        # if an attribute with the same name as a parameter is found,\n\
+      \        # a callback is registered (properties work, too).\n        self.flg\
+      \ = 0\n        self.M=M\n\n        \n    def modulat(self, MO):\n        if\
+      \ MO == 2:\n            cons = (np.array([1+0*1j,-1+0*1j]))\n        else:\n\
+      \            n = np.arange(0,MO)\n            a = np.asarray([x^(x>>1) for x\
+      \ in n])\n            D = np.sqrt(MO).astype(int)\n            a = np.reshape(a,(D,D))\n\
+      \            a[1::2, :] = a[1::2, ::-1]\n            nGray=np.reshape(a,(MO))\n\
+      \            x1 = nGray//D\n            y = nGray%D\n            Ay=2*y+1-D\n\
+      \            Ax=2*x1+1-D\n            cons = Ax+1j*Ay\n            cons = cons/np.max(np.absolute((np.real(cons))))\n\
+      \        return cons\n\n    def work(self, input_items, output_items):\n   \
+      \     if self.flg == 0:\n            self.dp = self.modulat(self.M)\n      \
+      \      self.flg = 1\n        \n        tdat = np.transpose(np.tile(input_items[0],(len(self.dp),1)))\n\
+      \        tcons = np.tile(self.dp,(len(input_items[0]),1))\n\n        ll = np.subtract(tdat,tcons)\n\
+      \        min_ind = np.argmin(np.sqrt(np.real(ll)**2 + np.imag(ll)**2),axis=1)\n\
+      \        output_items[0][:] = min_ind.astype('int')\n        \n\n        return\
+      \ len(output_items[0])\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('QAM Demodulator', 'blk', [('M', '4')], [('0', 'complex', 1)], [('0',
+      'short', 1)], '', ['M'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [712, 628.0]
+    rotation: 0
+    state: enabled
+- name: epy_module_0
+  id: epy_module
+  parameters:
+    alias: ''
+    comment: ''
+    source_code: 'import numpy as np
+
+
+      np.random.seed(444)
+
+      '
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1112, 12.0]
+    rotation: 0
+    state: enabled
+- name: fft_vxx_0
+  id: fft_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    fft_size: fft_len
+    forward: 'False'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nthreads: '1'
+    shift: 'True'
+    type: complex
+    window: '[]'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [208, 300.0]
+    rotation: 0
+    state: enabled
+- name: fft_vxx_0_0
+  id: fft_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    fft_size: fft_len
+    forward: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nthreads: '1'
+    shift: 'True'
+    type: complex
+    window: '[]'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [448, 444.0]
+    rotation: 0
+    state: enabled
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: import math,cmath,numpy, random, time
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [640, 20.0]
+    rotation: 0
+    state: true
+- name: qtgui_const_sink_x_0
+  id: qtgui_const_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: '"blue"'
+    color10: '"red"'
+    color2: '"red"'
+    color3: '"red"'
+    color4: '"red"'
+    color5: '"red"'
+    color6: '"red"'
+    color7: '"red"'
+    color8: '"red"'
+    color9: '"red"'
+    comment: ''
+    grid: 'True'
+    gui_hint: 0,0,2,2
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    marker1: '0'
+    marker10: '0'
+    marker2: '0'
+    marker3: '0'
+    marker4: '0'
+    marker5: '0'
+    marker6: '0'
+    marker7: '0'
+    marker8: '0'
+    marker9: '0'
+    name: '""'
+    nconnections: '1'
+    size: spf*(data_sc//2)
+    style1: '0'
+    style10: '0'
+    style2: '0'
+    style3: '0'
+    style4: '0'
+    style5: '0'
+    style6: '0'
+    style7: '0'
+    style8: '0'
+    style9: '0'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '"Sym#"'
+    type: complex
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    xmax: '2'
+    xmin: '-2'
+    ymax: '2'
+    ymin: '-2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [504, 616.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_freq_sink_x_0
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    axislabels: 'True'
+    bw: samp_rate
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: '0'
+    fftsize: '1024'
+    freqhalf: 'False'
+    grid: 'False'
+    gui_hint: 1,2,1,2
+    label: Relative Gain
+    label1: ''
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '""'
+    nconnections: '1'
+    showports: 'False'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: corr_est
+    type: float
+    units: dB
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: firdes.WIN_BLACKMAN_hARRIS
+    ymax: '10'
+    ymin: '-140'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [160, 412.0]
+    rotation: 180
+    state: enabled
+- name: qtgui_number_sink_1
+  id: qtgui_number_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    autoscale: 'False'
+    avg: '0'
+    color1: ("black", "black")
+    color10: ("black", "black")
+    color2: ("black", "black")
+    color3: ("black", "black")
+    color4: ("black", "black")
+    color5: ("black", "black")
+    color6: ("black", "black")
+    color7: ("black", "black")
+    color8: ("black", "black")
+    color9: ("black", "black")
+    comment: ''
+    factor1: '1'
+    factor10: '1'
+    factor2: '1'
+    factor3: '1'
+    factor4: '1'
+    factor5: '1'
+    factor6: '1'
+    factor7: '1'
+    factor8: '1'
+    factor9: '1'
+    graph_type: qtgui.NUM_GRAPH_HORIZ
+    gui_hint: ''
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    max: '1'
+    min: '0.000001'
+    name: '""'
+    nconnections: '1'
+    type: float
+    unit1: ''
+    unit10: ''
+    unit2: ''
+    unit3: ''
+    unit4: ''
+    unit5: ''
+    unit6: ''
+    unit7: ''
+    unit8: ''
+    unit9: ''
+    update_time: '0.10'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [432, 688.0]
+    rotation: 180
+    state: enabled
+- name: qtgui_time_sink_x_0_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'True'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '""'
+    nconnections: '1'
+    size: '512'
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_TAG
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: corr_est
+    type: float
+    update_time: '0.01'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '160000'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1120, 448.0]
+    rotation: 0
+    state: disabled
+
+connections:
+- [blocks_complex_to_float_1, '0', epy_block_1, '0']
+- [blocks_complex_to_mag_squared_0, '0', qtgui_time_sink_x_0_0, '0']
+- [blocks_float_to_complex_0, '0', blocks_tagged_stream_mux_1, '0']
+- [blocks_float_to_complex_1, '0', blocks_stream_to_vector_0_0, '0']
+- [blocks_keep_m_in_n_1, '0', blocks_tag_gate_0, '0']
+- [blocks_keep_m_in_n_1, '0', qtgui_freq_sink_x_0, '0']
+- [blocks_multiply_const_vxx_0, '0', blocks_stream_to_tagged_stream_1, '0']
+- [blocks_stream_to_tagged_stream_0, '0', blocks_float_to_complex_0, '0']
+- [blocks_stream_to_tagged_stream_0_0_0_0_0_0, '0', digital_ofdm_carrier_allocator_cvc_0,
+  '0']
+- [blocks_stream_to_tagged_stream_1, '0', blocks_tagged_stream_mux_1, '1']
+- [blocks_stream_to_tagged_stream_3, '0', blocks_vector_to_stream_0_0, '0']
+- [blocks_stream_to_vector_0_0, '0', fft_vxx_0_0, '0']
+- [blocks_tag_gate_0, '0', blocks_float_to_complex_1, '0']
+- [blocks_tag_gate_1, '0', blocks_throttle_0, '0']
+- [blocks_tag_gate_1, '0', epy_block_4, '0']
+- [blocks_tagged_stream_mux_1, '0', channels_channel_model_0, '0']
+- [blocks_throttle_0, '0', qtgui_const_sink_x_0, '0']
+- [blocks_vector_source_x_0_1, '0', blocks_stream_to_tagged_stream_0, '0']
+- [blocks_vector_to_stream_0, '0', blocks_multiply_const_vxx_0, '0']
+- [blocks_vector_to_stream_0_0, '0', epy_block_2, '0']
+- [channels_channel_model_0, '0', digital_corr_est_cc_0, '0']
+- [digital_corr_est_cc_0, '0', blocks_complex_to_float_1, '0']
+- [digital_corr_est_cc_0, '1', blocks_complex_to_mag_squared_0, '0']
+- [digital_ofdm_carrier_allocator_cvc_0, '0', fft_vxx_0, '0']
+- [epy_block_0, '0', blocks_stream_to_tagged_stream_0_0_0_0_0_0, '0']
+- [epy_block_1, '0', blocks_keep_m_in_n_1, '0']
+- [epy_block_2, '0', blocks_tag_gate_1, '0']
+- [epy_block_3, '0', qtgui_number_sink_1, '0']
+- [epy_block_4, '0', epy_block_3, '0']
+- [fft_vxx_0, '0', blocks_vector_to_stream_0, '0']
+- [fft_vxx_0_0, '0', blocks_stream_to_tagged_stream_3, '0']
+
+metadata:
+  file_format: 1

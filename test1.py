@@ -1,0 +1,1 @@
+numpy.arange(-1*((data_sc+pilot_sc)//(pilot_sc*2)),((data_sc+pilot_sc)/2),((data_sc+pilot_sc)/pilot_sc))[numpy.arange(-1*((data_sc+pilot_sc)//(pilot_sc*2)),((data_sc+pilot_sc)/2),((data_sc+pilot_sc)/pilot_sc))>0].astype(int)
