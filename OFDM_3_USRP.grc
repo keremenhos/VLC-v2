@@ -751,7 +751,7 @@ blocks:
 - name: epy_block_2
   id: epy_block
   parameters:
-    M: '4'
+    M: M
     _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
       \ GRC will instantiate the first class it finds\nto get ports and parameters\
       \ of your block. The arguments to __init__  will\nbe the parameters. All of\

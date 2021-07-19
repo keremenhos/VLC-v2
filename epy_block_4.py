@@ -28,7 +28,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         
     def modulat(self, MO):
         if MO == 2:
-            cons = (np.array([1+0*1j,-1+0*1j]))
+            cons = (np.array([-1+0*1j,1+0*1j]))
         else:
             n = np.arange(0,MO)
             a = np.asarray([x^(x>>1) for x in n])

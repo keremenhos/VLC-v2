@@ -47,6 +47,7 @@ class blk(gr.basic_block):  # other base classes are basic_block, decim_block, i
         self.spf = symbols_per_frame
         self.flg = 0
         self.flg2 = 0
+        self.xxx = 0
 #        self.n_sc = (self.data_sc+self.pilot_sc)/2
         self.n_grd = self.guard_sc//2
 
@@ -94,32 +95,56 @@ class blk(gr.basic_block):  # other base classes are basic_block, decim_block, i
             if key == 'sym':
                 self.offset = offset
                 self.xx = self.p_ind + self.offset - self.aa
+#                if self.xxx == 0:
+#                    print(self.xx)
                 self.ch_est = np.true_divide(in0[self.xx.astype(int)],self.tx_pilot)
                 
                 self.ch_est_r = np.real(self.ch_est)
                 self.ch_est_i = np.imag(self.ch_est)
                 
+#                f_r = interpolate.splrep(self.p_ind,self.ch_est_r,s=0)
+#                f_i = interpolate.splrep(self.p_ind,self.ch_est_i,s=0)
+#                H_r = interpolate.splev((self.s_sc_ind),f_r,der=0)
+#                H_i = interpolate.splev((self.s_sc_ind),f_i,der=0)
+
                 f_r = interpolate.splrep(self.p_ind,self.ch_est_r,s=0)
                 f_i = interpolate.splrep(self.p_ind,self.ch_est_i,s=0)
-                H_r = interpolate.splev((self.s_sc_ind),f_r,der=0)
-                H_i = interpolate.splev((self.s_sc_ind),f_i,der=0)
+                H_r = interpolate.splev(np.sort(self.alli),f_r,der=0)
+                H_i = interpolate.splev(np.sort(self.alli),f_i,der=0)
                 H = H_r + H_i*1j
+                
+#                f_r = interpolate.interp1d(self.p_ind, self.ch_est_r, kind = 'slinear')
+#                f_i = interpolate.interp1d(self.p_ind, self.ch_est_i, kind = 'slinear')
+#                H_r = f_r(self.s_sc_ind)
+#                H_i = f_i(self.s_sc_ind)
+#                self.H = H_r + H_i*1j
 
                 if sum(H_r) != 0:
-                    self.indind = self.s_sc_ind + (self.offset-self.aa)
-                    self.sym_out = np.multiply(np.multiply((np.multiply(np.conj(H),H)**(-1)),np.conj(H)),in0[self.indind])
-                    self.data_out_buf.extend(self.sym_out[self.dsc_iii])
+#                    self.indind = self.s_sc_ind + (self.offset-self.aa)
+#                    self.sym_out = np.multiply(np.multiply((np.multiply(np.conj(self.H),self.H)**(-1)),np.conj(self.H)),in0[self.indind])
+#                    self.data_out_buf.extend(self.sym_out[self.dsc_iii])
+                 
+                    self.sym_out = np.multiply(np.multiply((np.multiply(np.conj(H),H)**(-1)),np.conj(H)),in0[(self.offset-self.aa):(self.offset-self.aa)+self.ffts])
+                    self.out_buf.extend(self.sym_out)
+                    self.data_out_buf.extend(self.sym_out[self.dsc_ind[(self.data_sc//2):].astype(int)])
+                    
                     self.sym_n += 1
                     if self.flg == 0:
                         self.flg = 1
                         self.index1 = self.offset
                         self.cind = 0
+#                        self.add_item_tag(0, (self.index1), pmt.intern("pck_st"), pmt.intern(str(self.sym_n)))
                     self.add_item_tag(0, (self.index1 + self.cind*(self.data_sc//2)), pmt.intern("Sym#"), pmt.intern(str(self.sym_n)))
                     if self.sym_n == 1:
+#                        print(self.cind)
                         self.add_item_tag(0, (self.index1 + self.cind*(self.data_sc//2)), pmt.intern("pck_st"), pmt.intern(str(self.sym_n)))
                     self.cind += 1
                     if self.sym_n == self.spf:
                         self.sym_n = 0
+                else:
+                    self.xxx += 1
+#                    print(self.xxx)
+#                    return 0
                 
         if len(self.data_out_buf)>=len(out):
             output_items[0][:] = self.data_out_buf[:len(out)]

@@ -85,7 +85,7 @@ blocks:
     start: '1'
     step: '1'
     stop: '100'
-    value: '45'
+    value: '34'
     widget: counter_slider
   states:
     bus_sink: false
@@ -119,7 +119,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '24'
+    value: '36'
   states:
     bus_sink: false
     bus_source: false
@@ -143,7 +143,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '64'
+    value: '128'
   states:
     bus_sink: false
     bus_source: false
@@ -188,7 +188,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '23'
+    value: '35'
   states:
     bus_sink: false
     bus_source: false
@@ -227,7 +227,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '12'
+    value: '36'
   states:
     bus_sink: false
     bus_source: false
@@ -287,7 +287,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '1000000'
+    value: '1250000'
   states:
     bus_sink: false
     bus_source: false
@@ -408,23 +408,6 @@ blocks:
     coordinate: [472, 252.0]
     rotation: 180
     state: enabled
-- name: blocks_null_sink_0
-  id: blocks_null_sink
-  parameters:
-    affinity: ''
-    alias: ''
-    bus_structure_sink: '[[0,],]'
-    comment: ''
-    num_inputs: '1'
-    type: float
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [512, 684.0]
-    rotation: 180
-    state: true
 - name: blocks_stream_to_tagged_stream_0
   id: blocks_stream_to_tagged_stream
   parameters:
@@ -701,7 +684,7 @@ blocks:
       \ = pilot_symbols\n        self.out_buf = np.zeros(len(self.data)*2, dtype=complex)\n\
       \        self.spf = spf\n        self.flg = 0\n        self.data2 = self.data\n\
       \        \n    def modulat(self, MO):\n        if MO == 2:\n            cons\
-      \ = np.array([1+0*1j,-1+0*1j])\n        else:\n            n = np.arange(0,MO)\n\
+      \ = np.array([-1+0*1j,1+0*1j])\n        else:\n            n = np.arange(0,MO)\n\
       \            a = np.asarray([x^(x>>1) for x in n])\n            D = np.sqrt(MO).astype(int)\n\
       \            a = np.reshape(a,(D,D))\n            a[1::2, :] = a[1::2, ::-1]\n\
       \            nGray=np.reshape(a,(MO))\n            x1 = nGray//D\n         \
@@ -716,7 +699,7 @@ blocks:
       \            for z in range(self.spf*(self.data_subcarrier//2)):\n         \
       \       self.out_buf[z*self.data_subcarrier:(z+1)*self.data_subcarrier] = list(np.conj(np.flip(self.data_buf[z*self.data_subcarrier//2:(z+1)*self.data_subcarrier//2])))\
       \ + list(self.data_buf[z*self.data_subcarrier//2:(z+1)*self.data_subcarrier//2])\n\
-      \            print('1111')\n#            print(len(out))\n         \n      \
+      #            print('1111')\n#            print(len(out))\n         \n      \
       \  if np.sum(self.data2-self.data) != 0:\n            self.data2 = self.data\n\
       \            if len(out)<len(self.data):\n                print('22222')\n \
       \               return 0\n            self.data2 = self.data\n            for\
@@ -836,7 +819,7 @@ blocks:
       \        self.ffts = fft_size\n        self.pilot_sym = pilot_symbols\n    \
       \    self.aa = 0\n        self.out_buf = []\n        self.data_out_buf = []\n\
       \        self.sym_n = 0\n        self.spf = symbols_per_frame\n        self.flg\
-      \ = 0\n        self.flg2 = 0\n#        self.n_sc = (self.data_sc+self.pilot_sc)/2\n\
+      \ = 0\n        self.flg2 = 0\n        self.xxx = 0\n#        self.n_sc = (self.data_sc+self.pilot_sc)/2\n\
       \        self.n_grd = self.guard_sc//2\n\n    def forecast(self, noutput_items,\
       \ ninput_items_required):\n        #setup size of input_items[i] for work call\n\
       \        for i in range(len(ninput_items_required)):\n            ninput_items_required[i]\
@@ -864,30 +847,46 @@ blocks:
       \ tag in tags:\n            offset = tag.offset\n            key = pmt.to_python(tag.key)\
       \ # convert from PMT to python string\n            if key == 'sym':\n      \
       \          self.offset = offset\n                self.xx = self.p_ind + self.offset\
-      \ - self.aa\n                self.ch_est = np.true_divide(in0[self.xx.astype(int)],self.tx_pilot)\n\
+      \ - self.aa\n#                if self.xxx == 0:\n#                    print(self.xx)\n\
+      \                self.ch_est = np.true_divide(in0[self.xx.astype(int)],self.tx_pilot)\n\
       \                \n                self.ch_est_r = np.real(self.ch_est)\n  \
-      \              self.ch_est_i = np.imag(self.ch_est)\n                \n    \
-      \            f_r = interpolate.splrep(self.p_ind,self.ch_est_r,s=0)\n      \
-      \          f_i = interpolate.splrep(self.p_ind,self.ch_est_i,s=0)\n        \
-      \        H_r = interpolate.splev((self.s_sc_ind),f_r,der=0)\n              \
-      \  H_i = interpolate.splev((self.s_sc_ind),f_i,der=0)\n                H = H_r\
-      \ + H_i*1j\n\n                if sum(H_r) != 0:\n                    self.indind\
-      \ = self.s_sc_ind + (self.offset-self.aa)\n                    self.sym_out\
-      \ = np.multiply(np.multiply((np.multiply(np.conj(H),H)**(-1)),np.conj(H)),in0[self.indind])\n\
-      \                    self.data_out_buf.extend(self.sym_out[self.dsc_iii])\n\
-      \                    self.sym_n += 1\n                    if self.flg == 0:\n\
-      \                        self.flg = 1\n                        self.index1 =\
-      \ self.offset\n                        self.cind = 0\n                    self.add_item_tag(0,\
+      \              self.ch_est_i = np.imag(self.ch_est)\n                \n#   \
+      \             f_r = interpolate.splrep(self.p_ind,self.ch_est_r,s=0)\n#    \
+      \            f_i = interpolate.splrep(self.p_ind,self.ch_est_i,s=0)\n#     \
+      \           H_r = interpolate.splev((self.s_sc_ind),f_r,der=0)\n#          \
+      \      H_i = interpolate.splev((self.s_sc_ind),f_i,der=0)\n\n              \
+      \  f_r = interpolate.splrep(self.p_ind,self.ch_est_r,s=0)\n                f_i\
+      \ = interpolate.splrep(self.p_ind,self.ch_est_i,s=0)\n                H_r =\
+      \ interpolate.splev(np.sort(self.alli),f_r,der=0)\n                H_i = interpolate.splev(np.sort(self.alli),f_i,der=0)\n\
+      \                H = H_r + H_i*1j\n                \n#                f_r =\
+      \ interpolate.interp1d(self.p_ind, self.ch_est_r, kind = 'slinear')\n#     \
+      \           f_i = interpolate.interp1d(self.p_ind, self.ch_est_i, kind = 'slinear')\n\
+      #                H_r = f_r(self.s_sc_ind)\n#                H_i = f_i(self.s_sc_ind)\n\
+      #                self.H = H_r + H_i*1j\n\n                if sum(H_r) != 0:\n\
+      #                    self.indind = self.s_sc_ind + (self.offset-self.aa)\n#\
+      \                    self.sym_out = np.multiply(np.multiply((np.multiply(np.conj(self.H),self.H)**(-1)),np.conj(self.H)),in0[self.indind])\n\
+      #                    self.data_out_buf.extend(self.sym_out[self.dsc_iii])\n\
+      \                 \n                    self.sym_out = np.multiply(np.multiply((np.multiply(np.conj(H),H)**(-1)),np.conj(H)),in0[(self.offset-self.aa):(self.offset-self.aa)+self.ffts])\n\
+      \                    self.out_buf.extend(self.sym_out)\n                   \
+      \ self.data_out_buf.extend(self.sym_out[self.dsc_ind[(self.data_sc//2):].astype(int)])\n\
+      \                    \n                    self.sym_n += 1\n               \
+      \     if self.flg == 0:\n                        self.flg = 1\n            \
+      \            self.index1 = self.offset\n                        self.cind =\
+      \ 0\n#                        self.add_item_tag(0, (self.index1), pmt.intern(\"\
+      pck_st\"), pmt.intern(str(self.sym_n)))\n                    self.add_item_tag(0,\
       \ (self.index1 + self.cind*(self.data_sc//2)), pmt.intern(\"Sym#\"), pmt.intern(str(self.sym_n)))\n\
-      \                    if self.sym_n == 1:\n                        self.add_item_tag(0,\
-      \ (self.index1 + self.cind*(self.data_sc//2)), pmt.intern(\"pck_st\"), pmt.intern(str(self.sym_n)))\n\
-      \                    self.cind += 1\n                    if self.sym_n == self.spf:\n\
-      \                        self.sym_n = 0\n                \n        if len(self.data_out_buf)>=len(out):\n\
-      \            output_items[0][:] = self.data_out_buf[:len(out)]\n           \
-      \ self.data_out_buf = self.data_out_buf[len(out):]\n            self.aa = self.aa\
-      \ + len(in0)\n            self.consume(0, len(in0))\n            return len(out)\n\
-      \n        self.aa = self.aa + len(in0)\n        self.consume(0, len(in0))\n\
-      \        return 0\n"
+      \                    if self.sym_n == 1:\n#                        print(self.cind)\n\
+      \                        self.add_item_tag(0, (self.index1 + self.cind*(self.data_sc//2)),\
+      \ pmt.intern(\"pck_st\"), pmt.intern(str(self.sym_n)))\n                   \
+      \ self.cind += 1\n                    if self.sym_n == self.spf:\n         \
+      \               self.sym_n = 0\n                else:\n                    self.xxx\
+      \ += 1\n#                    print(self.xxx)\n#                    return 0\n\
+      \                \n        if len(self.data_out_buf)>=len(out):\n          \
+      \  output_items[0][:] = self.data_out_buf[:len(out)]\n            self.data_out_buf\
+      \ = self.data_out_buf[len(out):]\n            self.aa = self.aa + len(in0)\n\
+      \            self.consume(0, len(in0))\n            return len(out)\n\n    \
+      \    self.aa = self.aa + len(in0)\n        self.consume(0, len(in0))\n     \
+      \   return 0\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -921,7 +920,7 @@ blocks:
       from gnuradio import blocks\nfrom gnuradio import grc\nimport pmt\nimport inspect\n\
       \n\nclass blk(gr.sync_block):\n\n    def __init__(self, data=[], M=4, display_BER\
       \ = 0, num_bits = 1000000):\n        gr.sync_block.__init__(\n            self,\n\
-      \            name='BER',\n            in_sig=[np.int16],\n            out_sig=[np.float32]\n\
+      \            name='BER',\n            in_sig=[np.int16],\n            out_sig=[]\n\
       \        )\n        self.bin_data = data\n        self.e = 0\n        self.p\
       \ = 0\n        self.buf = []\n        self.flg = 0\n        self.k = np.sqrt(M)\n\
       \        self.ber = 1\n        self.display_BER = display_BER\n        self.num_bits\
@@ -946,8 +945,8 @@ blocks:
       \ self.p*(self.k*len(self.bin_data)) > self.num_bits:\n            self.ber\
       \ = self.e/(self.p*(self.k*len(self.bin_data)))\n            self.e = 0\n  \
       \          self.p = 0\n            if self.display_BER == 1:\n             \
-      \   print(self.ber)\n\n        output_items[0][:] = self.ber*np.ones(len(output_items[0]))\n\
-      \        return len(output_items[0])\n"
+      \   print(self.ber)\n\n#        output_items[0][:] = self.ber*np.ones(len(output_items[0]))\n\
+      \        return len(input_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -955,10 +954,10 @@ blocks:
     display_BER: P
     maxoutbuf: '0'
     minoutbuf: '0'
-    num_bits: 1e5
+    num_bits: 1e6
   states:
     _io_cache: ('BER', 'blk', [('data', '[]'), ('M', '4'), ('display_BER', '0'), ('num_bits',
-      '1000000')], [('0', 'short', 1)], [('0', 'float', 1)], '', ['display_BER', 'num_bits'])
+      '1000000')], [('0', 'short', 1)], [], '', ['display_BER', 'num_bits'])
     bus_sink: false
     bus_source: false
     bus_structure: null
@@ -979,7 +978,7 @@ blocks:
       \        )\n        # if an attribute with the same name as a parameter is found,\n\
       \        # a callback is registered (properties work, too).\n        self.flg\
       \ = 0\n        self.M=M\n\n        \n    def modulat(self, MO):\n        if\
-      \ MO == 2:\n            cons = (np.array([1+0*1j,-1+0*1j]))\n        else:\n\
+      \ MO == 2:\n            cons = (np.array([-1+0*1j,1+0*1j]))\n        else:\n\
       \            n = np.arange(0,MO)\n            a = np.asarray([x^(x>>1) for x\
       \ in n])\n            D = np.sqrt(MO).astype(int)\n            a = np.reshape(a,(D,D))\n\
       \            a[1::2, :] = a[1::2, ::-1]\n            nGray=np.reshape(a,(MO))\n\
@@ -1170,7 +1169,7 @@ blocks:
     bus_structure: null
     coordinate: [456, 544.0]
     rotation: 180
-    state: disabled
+    state: enabled
 - name: qtgui_freq_sink_x_0
   id: qtgui_freq_sink_x
   parameters:
@@ -1251,12 +1250,12 @@ blocks:
     coordinate: [160, 412.0]
     rotation: 180
     state: disabled
-- name: qtgui_number_sink_1
+- name: qtgui_number_sink_0
   id: qtgui_number_sink
   parameters:
     affinity: ''
     alias: ''
-    autoscale: 'False'
+    autoscale: 'True'
     avg: '0'
     color1: ("black", "black")
     color10: ("black", "black")
@@ -1292,10 +1291,10 @@ blocks:
     label8: ''
     label9: ''
     max: '1'
-    min: '0.000001'
+    min: '-1'
     name: '""'
     nconnections: '1'
-    type: float
+    type: short
     unit1: ''
     unit10: ''
     unit2: ''
@@ -1311,7 +1310,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [448, 616.0]
+    coordinate: [456, 608.0]
     rotation: 180
     state: disabled
 - name: qtgui_time_sink_x_0
@@ -1369,7 +1368,7 @@ blocks:
     marker9: '-1'
     name: '""'
     nconnections: '1'
-    size: '1024'
+    size: '128'
     srate: samp_rate
     stemplot: 'False'
     style1: '1'
@@ -1387,7 +1386,7 @@ blocks:
     tr_level: '0.0'
     tr_mode: qtgui.TRIG_MODE_TAG
     tr_slope: qtgui.TRIG_SLOPE_POS
-    tr_tag: packet_len
+    tr_tag: pck_st
     type: complex
     update_time: '0.10'
     width1: '1'
@@ -1401,14 +1400,14 @@ blocks:
     width8: '1'
     width9: '1'
     ylabel: Amplitude
-    ymax: '1'
-    ymin: '-1'
+    ymax: '2'
+    ymin: '-2'
     yunit: '""'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [216, 640.0]
+    coordinate: [48, 640.0]
     rotation: 180
     state: disabled
 - name: qtgui_time_sink_x_0_0
@@ -2170,12 +2169,12 @@ connections:
 - [blocks_stream_to_tagged_stream_0_0_0_0_0_0, '0', digital_ofdm_carrier_allocator_cvc_0,
   '0']
 - [blocks_stream_to_tagged_stream_1, '0', blocks_tagged_stream_mux_1, '1']
-- [blocks_stream_to_tagged_stream_1, '0', qtgui_time_sink_x_0, '0']
 - [blocks_stream_to_tagged_stream_3, '0', blocks_vector_to_stream_0_0, '0']
 - [blocks_stream_to_vector_0_0, '0', fft_vxx_0_0, '0']
 - [blocks_tag_gate_0, '0', blocks_float_to_complex_1, '0']
 - [blocks_tag_gate_1, '0', epy_block_4, '0']
 - [blocks_tag_gate_1, '0', qtgui_const_sink_x_0, '0']
+- [blocks_tag_gate_1, '0', qtgui_time_sink_x_0, '0']
 - [blocks_tagged_stream_mux_1, '0', uhd_usrp_sink_0, '0']
 - [blocks_vector_source_x_0_1, '0', blocks_stream_to_tagged_stream_0, '0']
 - [blocks_vector_to_stream_0, '0', blocks_multiply_const_vxx_0, '0']
@@ -2186,9 +2185,8 @@ connections:
 - [epy_block_0, '0', blocks_stream_to_tagged_stream_0_0_0_0_0_0, '0']
 - [epy_block_1, '0', blocks_keep_m_in_n_1, '0']
 - [epy_block_2, '0', blocks_tag_gate_1, '0']
-- [epy_block_3, '0', blocks_null_sink_0, '0']
-- [epy_block_3, '0', qtgui_number_sink_1, '0']
 - [epy_block_4, '0', epy_block_3, '0']
+- [epy_block_4, '0', qtgui_number_sink_0, '0']
 - [fft_vxx_0, '0', blocks_vector_to_stream_0, '0']
 - [fft_vxx_0_0, '0', blocks_stream_to_tagged_stream_3, '0']
 - [uhd_usrp_source_0, '0', digital_corr_est_cc_0, '0']

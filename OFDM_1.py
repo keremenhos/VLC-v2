@@ -22,6 +22,8 @@ if __name__ == '__main__':
             print("Warning: failed to XInitThreads()")
 
 from PyQt5 import Qt
+from gnuradio import qtgui
+import sip
 from gnuradio import blocks
 from gnuradio import digital
 from gnuradio import fft
@@ -82,33 +84,77 @@ class OFDM_1(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
-        self.pilot_sc = pilot_sc = 12
-        self.null = null = 23
-        self.data_sc = data_sc = 24
+        self.pilot_sc = pilot_sc = 36
+        self.null = null = 35
+        self.data_sc = data_sc = 36
         self.ppsc = ppsc = numpy.arange(-1*((data_sc+pilot_sc)//(pilot_sc*2)),((data_sc+pilot_sc)/2),((data_sc+pilot_sc)/pilot_sc))[numpy.arange(-1*((data_sc+pilot_sc)//(pilot_sc*2)),((data_sc+pilot_sc)/2),((data_sc+pilot_sc)/pilot_sc))>0].astype(int)+1+(null//2)
         self.pck_len = pck_len = 4096
-        self.fft_len = fft_len = 64
+        self.fft_len = fft_len = 128
         self.spf = spf = (pck_len-510)//fft_len
         self.pilot_symbols = pilot_symbols = numpy.array(numpy.random.randint(2,size=pilot_sc//2))*2 -1
         self.pdsc = pdsc = numpy.delete((numpy.arange((data_sc+pilot_sc)//2)+1+(null//2)),((numpy.arange((data_sc+pilot_sc)//2)+1+(null//2))[:, None] == ppsc).argmax(axis=0))
         self.M = M = 16
-        self.samp_rate = samp_rate = 1000000
+        self.samp_rate = samp_rate = 1250000
         self.psc = psc = numpy.sort(list(ppsc*-1) + list(ppsc))
         self.ps = ps = list(numpy.flip(pilot_symbols)) + list(pilot_symbols)
         self.guard = guard = fft_len-null-data_sc-pilot_sc
         self.dsc = dsc = numpy.sort(list(pdsc*-1) + list(pdsc))
         self.corr_thresh = corr_thresh = 0.04
-        self.TX_GAIN = TX_GAIN = 45
+        self.TX_GAIN = TX_GAIN = 34
         self.P = P = 0
         self.Data = Data = numpy.array(numpy.random.randint(M,size=(data_sc//2)*spf))
 
         ##################################################
         # Blocks
         ##################################################
+        self.qtgui_const_sink_x_0 = qtgui.const_sink_c(
+            spf*(data_sc//2), #size
+            "", #name
+            1 #number of inputs
+        )
+        self.qtgui_const_sink_x_0.set_update_time(0.10)
+        self.qtgui_const_sink_x_0.set_y_axis(-2, 2)
+        self.qtgui_const_sink_x_0.set_x_axis(-2, 2)
+        self.qtgui_const_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, "Sym#")
+        self.qtgui_const_sink_x_0.enable_autoscale(False)
+        self.qtgui_const_sink_x_0.enable_grid(True)
+        self.qtgui_const_sink_x_0.enable_axis_labels(True)
+
+
+        labels = ['', '', '', '', '',
+            '', '', '', '', '']
+        widths = [1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1]
+        colors = ["blue", "red", "red", "red", "red",
+            "red", "red", "red", "red", "red"]
+        styles = [0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0]
+        markers = [0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0]
+        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
+            1.0, 1.0, 1.0, 1.0, 1.0]
+
+        for i in range(1):
+            if len(labels[i]) == 0:
+                self.qtgui_const_sink_x_0.set_line_label(i, "Data {0}".format(i))
+            else:
+                self.qtgui_const_sink_x_0.set_line_label(i, labels[i])
+            self.qtgui_const_sink_x_0.set_line_width(i, widths[i])
+            self.qtgui_const_sink_x_0.set_line_color(i, colors[i])
+            self.qtgui_const_sink_x_0.set_line_style(i, styles[i])
+            self.qtgui_const_sink_x_0.set_line_marker(i, markers[i])
+            self.qtgui_const_sink_x_0.set_line_alpha(i, alphas[i])
+
+        self._qtgui_const_sink_x_0_win = sip.wrapinstance(self.qtgui_const_sink_x_0.pyqwidget(), Qt.QWidget)
+        self.top_grid_layout.addWidget(self._qtgui_const_sink_x_0_win, 0, 0, 2, 2)
+        for r in range(0, 2):
+            self.top_grid_layout.setRowStretch(r, 1)
+        for c in range(0, 2):
+            self.top_grid_layout.setColumnStretch(c, 1)
         self._corr_thresh_range = Range(0.01, 0.1, 0.005, 0.04, 200)
         self._corr_thresh_win = RangeWidget(self._corr_thresh_range, self.set_corr_thresh, 'corr_thresh', "counter_slider", float)
         self.top_layout.addWidget(self._corr_thresh_win)
-        self._TX_GAIN_range = Range(1, 100, 1, 45, 200)
+        self._TX_GAIN_range = Range(1, 100, 1, 34, 200)
         self._TX_GAIN_win = RangeWidget(self._TX_GAIN_range, self.set_TX_GAIN, 'TX_GAIN', "counter_slider", float)
         self.top_layout.addWidget(self._TX_GAIN_win)
         _P_check_box = Qt.QCheckBox('Print BER')
@@ -147,7 +193,7 @@ class OFDM_1(gr.top_block, Qt.QWidget):
         self.fft_vxx_0_0 = fft.fft_vcc(fft_len, True, [], True, 1)
         self.fft_vxx_0 = fft.fft_vcc(fft_len, False, [], True, 1)
         self.epy_block_4 = epy_block_4.blk(M=M)
-        self.epy_block_3 = epy_block_3.blk(data=Data, M=M, display_BER=P, num_bits=1e5)
+        self.epy_block_3 = epy_block_3.blk(data=Data, M=M, display_BER=P, num_bits=1e6)
         self.epy_block_2 = epy_block_2.blk(M=M, data_subcarrier=data_sc, pilot_subcarrier=pilot_sc, null_subcarrier=null, guard_subcarrier=guard, fft_size=fft_len, pilot_symbols=pilot_symbols, symbols_per_frame=spf)
         self.epy_block_1 = epy_block_1.blk(frame_length=pck_len)
         self.epy_block_0 = epy_block_0.blk(data=Data, M=M, data_subcarrier=data_sc, pilot_subcarrier=pilot_sc, null_subcarrier=null, guard_subcarrier=guard, fft_size=fft_len, pilot_symbols=pilot_symbols, spf=spf)
@@ -166,7 +212,6 @@ class OFDM_1(gr.top_block, Qt.QWidget):
         self.blocks_stream_to_tagged_stream_1 = blocks.stream_to_tagged_stream(gr.sizeof_gr_complex, 1, fft_len*spf, "packet_len")
         self.blocks_stream_to_tagged_stream_0_0_0_0_0_0 = blocks.stream_to_tagged_stream(gr.sizeof_gr_complex, 1, data_sc, "frame_len")
         self.blocks_stream_to_tagged_stream_0 = blocks.stream_to_tagged_stream(gr.sizeof_float, 1, 510, 'packet_len')
-        self.blocks_null_sink_0 = blocks.null_sink(gr.sizeof_float*1)
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_cc(1/TX_GAIN)
         self.blocks_keep_m_in_n_1 = blocks.keep_m_in_n(gr.sizeof_float, fft_len*spf, pck_len, 1)
         self.blocks_float_to_complex_1 = blocks.float_to_complex(1)
@@ -189,6 +234,7 @@ class OFDM_1(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_stream_to_vector_0_0, 0), (self.fft_vxx_0_0, 0))
         self.connect((self.blocks_tag_gate_0, 0), (self.blocks_float_to_complex_1, 0))
         self.connect((self.blocks_tag_gate_1, 0), (self.epy_block_4, 0))
+        self.connect((self.blocks_tag_gate_1, 0), (self.qtgui_const_sink_x_0, 0))
         self.connect((self.blocks_tagged_stream_mux_1, 0), (self.uhd_usrp_sink_0, 0))
         self.connect((self.blocks_vector_source_x_0_1, 0), (self.blocks_stream_to_tagged_stream_0, 0))
         self.connect((self.blocks_vector_to_stream_0, 0), (self.blocks_multiply_const_vxx_0, 0))
@@ -198,7 +244,6 @@ class OFDM_1(gr.top_block, Qt.QWidget):
         self.connect((self.epy_block_0, 0), (self.blocks_stream_to_tagged_stream_0_0_0_0_0_0, 0))
         self.connect((self.epy_block_1, 0), (self.blocks_keep_m_in_n_1, 0))
         self.connect((self.epy_block_2, 0), (self.blocks_tag_gate_1, 0))
-        self.connect((self.epy_block_3, 0), (self.blocks_null_sink_0, 0))
         self.connect((self.epy_block_4, 0), (self.epy_block_3, 0))
         self.connect((self.fft_vxx_0, 0), (self.blocks_vector_to_stream_0, 0))
         self.connect((self.fft_vxx_0_0, 0), (self.blocks_stream_to_tagged_stream_3, 0))

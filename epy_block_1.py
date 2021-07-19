@@ -46,7 +46,7 @@ class blk(gr.basic_block):
                     self.off = offset
                     self.det = 1
                     self.flg2 = 0
-                    self.buf.extend(in0[(self.off-self.aa)+2:])
+                    self.buf.extend(in0[(self.off-self.aa)+1:])
                     break
             if self.det == 0:
                 self.b = 0
@@ -76,7 +76,7 @@ class blk(gr.basic_block):
                             self.det = 1
                             self.flg2 = 0
                             self.buf=[]
-                            self.buf.extend(in0[(self.off-self.aa)+2:])
+                            self.buf.extend(in0[(self.off-self.aa)+1:])
                             self.b = 1
                             break
 

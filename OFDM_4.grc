@@ -861,7 +861,8 @@ blocks:
       \                    if self.sym_n == 1:\n                        self.add_item_tag(0,\
       \ (self.index1 + self.cind*(self.data_sc//2)), pmt.intern(\"pck_st\"), pmt.intern(str(self.sym_n)))\n\
       \                    self.cind += 1\n                    if self.sym_n == self.spf:\n\
-      \                        self.sym_n = 0\n                \n        if len(self.data_out_buf)>=len(out):\n\
+      \                        self.sym_n = 0\n                else:\n           \
+      \         print('ANAN')\n                \n        if len(self.data_out_buf)>=len(out):\n\
       \            output_items[0][:] = self.data_out_buf[:len(out)]\n           \
       \ self.data_out_buf = self.data_out_buf[len(out):]\n            self.aa = self.aa\
       \ + len(in0)\n            self.consume(0, len(in0))\n            return len(out)\n\
